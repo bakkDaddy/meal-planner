@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="theme-color" content="#1a1a1a" />
+  <title>Meal Planner</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- AUTH SCREEN -->
+  <div id="screen-auth" class="screen active">
+    <div class="auth-wrap">
+      <div class="auth-logo">🍳</div>
+      <h1 class="auth-title">Meal Planner</h1>
+      <p class="auth-sub">Sign in to load this week's meals from Google Drive.</p>
+      <button id="btn-signin" class="btn-primary">Sign in with Google</button>
+    </div>
+  </div>
+
+  <!-- LOADING SCREEN -->
+  <div id="screen-loading" class="screen">
+    <div class="loading-wrap">
+      <div class="spinner"></div>
+      <p id="loading-msg">Loading meals...</p>
+    </div>
+  </div>
+
+  <!-- ERROR SCREEN -->
+  <div id="screen-error" class="screen">
+    <div class="error-wrap">
+      <div class="error-icon">!</div>
+      <p id="error-msg">Something went wrong.</p>
+      <button id="btn-retry" class="btn-primary">Try again</button>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="screen-app" class="screen">
+
+    <!-- NAV -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-view="meals">
+        <span class="nav-icon">📅</span>
+        <span class="nav-label">This Week</span>
+      </button>
+      <button class="nav-btn" data-view="shopping">
+        <span class="nav-icon">🛒</span>
+        <span class="nav-label">Shopping</span>
+      </button>
+      <button class="nav-btn" data-view="cook">
+        <span class="nav-icon">🍳</span>
+        <span class="nav-label">Cook</span>
+      </button>
+    </nav>
+
+    <!-- MEALS VIEW -->
+    <div id="view-meals" class="view active">
+      <div class="view-header">
+        <h2 class="view-title">This Week</h2>
+        <button id="btn-refresh" class="btn-icon" title="Refresh">↻</button>
+      </div>
+      <div id="meals-list" class="meals-list"></div>
+    </div>
+
+    <!-- SHOPPING VIEW -->
+    <div id="view-shopping" class="view">
+      <div class="view-header">
+        <h2 class="view-title">Shopping List</h2>
+        <button id="btn-clear-checks" class="btn-text">Clear all</button>
+      </div>
+      <div id="shopping-list" class="shopping-list"></div>
+    </div>
+
+    <!-- COOK VIEW -->
+    <div id="view-cook" class="view">
+      <div class="view-header">
+        <h2 class="view-title">Cook</h2>
+      </div>
+      <div id="cook-meal-select" class="cook-select"></div>
+      <div id="cook-steps" class="cook-steps hidden"></div>
+    </div>
+
+  </div>
+
+  <script src="config.js"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="app.js"></script>
+</body>
+</html>
