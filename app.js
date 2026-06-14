@@ -176,8 +176,8 @@
    }
    
    function signIn() {
-     tokenClient.requestAccessToken({ prompt: 'consent' });
-   }
+    tokenClient.requestAccessToken({ prompt: 'select_account' });
+  }
    
    /* ── Google Drive ── */
    
