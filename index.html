@@ -87,8 +87,13 @@
 
   </div>
 
-  <script src="config.js?v=4"></script>
+  <script src="config.js?v=5"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+    }
+  </script>
 </body>
 </html>
