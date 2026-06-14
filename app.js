@@ -182,12 +182,26 @@
    /* ── Google Drive ── */
    
    async function driveGet(url) {
-     const res = await fetch(url, {
-       headers: { Authorization: 'Bearer ' + accessToken }
-     });
-     if (!res.ok) throw new Error('Drive request failed: ' + res.status);
-     return res.json();
-   }
+    const res = await fetch(url, {
+      headers: { Authorization: 'Bearer ' + accessToken }
+    });
+    if (res.status === 401) {
+      // Token expired — get a new one silently
+      return new Promise((resolve, reject) => {
+        tokenClient.requestAccessToken({ prompt: '' });
+        // Retry after token refresh
+        setTimeout(async () => {
+          const retry = await fetch(url, {
+            headers: { Authorization: 'Bearer ' + accessToken }
+          });
+          if (!retry.ok) reject(new Error('Drive request failed after refresh'));
+          else resolve(retry.json());
+        }, 2000);
+      });
+    }
+    if (!res.ok) throw new Error('Drive request failed: ' + res.status);
+    return res.json();
+  }
    
    async function loadMealsFromDrive() {
      showLoading('Finding your meal plan...');
@@ -467,15 +481,15 @@
    /* ── Init ── */
    
    window.addEventListener('load', () => {
-    const saved = localStorage.getItem('gtoken');
-    if (saved) {
-      accessToken = saved;
-      loadMealsFromDrive();
-    }
     const waitForGoogle = setInterval(() => {
       if (typeof google !== 'undefined' && google.accounts) {
         clearInterval(waitForGoogle);
         initGoogle();
+        const saved = localStorage.getItem('gtoken');
+        if (saved) {
+          accessToken = saved;
+          loadMealsFromDrive();
+        }
       }
     }, 100);
   });
