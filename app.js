@@ -169,6 +169,7 @@
            return;
          }
          accessToken = response.access_token;
+         localStorage.setItem('gtoken', accessToken); 
          loadMealsFromDrive();
        }
      });
@@ -466,10 +467,15 @@
    /* ── Init ── */
    
    window.addEventListener('load', () => {
-     const waitForGoogle = setInterval(() => {
-       if (typeof google !== 'undefined' && google.accounts) {
-         clearInterval(waitForGoogle);
-         initGoogle();
-       }
-     }, 100);
-   });
+    const saved = localStorage.getItem('gtoken');
+    if (saved) {
+      accessToken = saved;
+      loadMealsFromDrive();
+    }
+    const waitForGoogle = setInterval(() => {
+      if (typeof google !== 'undefined' && google.accounts) {
+        clearInterval(waitForGoogle);
+        initGoogle();
+      }
+    }, 100);
+  });
