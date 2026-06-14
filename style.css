@@ -365,9 +365,8 @@ html, body {
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
-.cook-steps.hidden { display: none; }
+.cook-steps.hidden { display: none !important; }
 
 .cook-back {
   background: none;
@@ -403,7 +402,8 @@ html, body {
   background: var(--bg-card);
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  overflow: hidden;
+  overflow: visible;
+  flex-shrink: 0;
 }
 
 .cook-ingredient {
