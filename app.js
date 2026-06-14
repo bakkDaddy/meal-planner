@@ -389,55 +389,60 @@
    }
    
    function renderCookSteps(mealId) {
-     const meal = mealData.meals.find(m => m.id === mealId);
-     if (!meal) return;
-   
-     const container = document.getElementById('cook-meal-select');
-     const stepsContainer = document.getElementById('cook-steps');
-   
-     container.classList.add('hidden');
-     stepsContainer.classList.remove('hidden');
-   
-     const ingredients = meal.ingredients || [];
-     const steps = [...(meal.steps || [])].sort((a, b) => a.order - b.order);
-   
-     const ingredientRows = ingredients.map(ing => {
-       const qty = formatUnit(ing.amount, ing.unit);
-       const prep = ing.prep ? ` — ${ing.prep}` : '';
-       return `<li class="cook-ingredient"><span class="ing-qty">${qty}</span> ${ing.name}${prep}</li>`;
-     }).join('');
-   
-     const stepRows = steps.map(step => {
-       const key = `${mealId}_${step.order}`;
-       const done = doneSteps[key] ? 'done' : '';
-       return `
-         <div class="step ${done}" data-key="${key}">
-           <div class="step-num">${step.order}</div>
-           <div class="step-text">${step.instruction}</div>
-         </div>
-       `;
-     }).join('');
-   
-     stepsContainer.innerHTML = `
-       <button class="cook-back">← Back</button>
-       <div class="cook-meal-title">${meal.name}</div>
-       <div class="cook-section-label">Ingredients</div>
-       <ul class="cook-ingredients">${ingredientRows}</ul>
-       <div class="cook-section-label">Steps</div>
-       ${stepRows}
-     `;
-   
-     stepsContainer.querySelector('.cook-back').addEventListener('click', renderCookSelect);
-   
-     stepsContainer.querySelectorAll('.step').forEach(el => {
-       el.addEventListener('click', () => {
-         const key = el.dataset.key;
-         doneSteps[key] = !doneSteps[key];
-         saveState();
-         el.classList.toggle('done', doneSteps[key]);
-       });
-     });
-   }
+    const meal = mealData.meals.find(m => m.id === mealId);
+    if (!meal) return;
+  
+    const container = document.getElementById('cook-meal-select');
+    const stepsContainer = document.getElementById('cook-steps');
+  
+    container.classList.add('hidden');
+    stepsContainer.classList.remove('hidden');
+  
+    const ingredients = meal.ingredients || [];
+    const steps = [...(meal.steps || [])].sort((a, b) => a.order - b.order);
+  
+    console.log('Meal:', meal.name);
+    console.log('Ingredients:', JSON.stringify(ingredients));
+  
+    const ingredientRows = ingredients.map(ing => {
+      const qty = ing.unit
+        ? (COMPACT_UNITS.includes(ing.unit) ? `${ing.amount}${ing.unit}` : `${ing.amount} ${ing.unit}`)
+        : `${ing.amount}x`;
+      const prep = ing.prep ? ` — ${ing.prep}` : '';
+      return `<li class="cook-ingredient"><span class="ing-qty">${qty}</span> ${ing.name}${prep}</li>`;
+    }).join('');
+  
+    const stepRows = steps.map(step => {
+      const key = `${mealId}_${step.order}`;
+      const done = doneSteps[key] ? 'done' : '';
+      return `
+        <div class="step ${done}" data-key="${key}">
+          <div class="step-num">${step.order}</div>
+          <div class="step-text">${step.instruction}</div>
+        </div>
+      `;
+    }).join('');
+  
+    stepsContainer.innerHTML = `
+      <button class="cook-back">← Back</button>
+      <div class="cook-meal-title">${meal.name}</div>
+      <div class="cook-section-label">Ingredients</div>
+      <ul class="cook-ingredients">${ingredientRows}</ul>
+      <div class="cook-section-label">Steps</div>
+      ${stepRows}
+    `;
+  
+    stepsContainer.querySelector('.cook-back').addEventListener('click', renderCookSelect);
+  
+    stepsContainer.querySelectorAll('.step').forEach(el => {
+      el.addEventListener('click', () => {
+        const key = el.dataset.key;
+        doneSteps[key] = !doneSteps[key];
+        saveState();
+        el.classList.toggle('done', doneSteps[key]);
+      });
+    });
+  }
    
    /* ── Render App ── */
    
